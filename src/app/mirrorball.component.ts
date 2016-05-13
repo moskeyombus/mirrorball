@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
-import * as THREE from 'three';
-
+import { SceneComponent } from './scene.component'
 
 @Component({
   moduleId: module.id,
   selector: 'mirrorball-app',
   templateUrl: 'mirrorball.component.html',
-  styleUrls: ['mirrorball.component.css']
+  styleUrls: ['mirrorball.component.css'],
+  directives: [SceneComponent]
 })
-export class MirrorballAppComponent {
+export class MirrorballAppComponent { 
   title = 'mirrorball works!';
 }

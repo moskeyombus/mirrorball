@@ -3,7 +3,7 @@
  **********************************************************************************************/
 /** Map relative paths to URLs. */
 const map: any = {
-  'three': 'vendor/three'
+  'three': 'vendor/three/three.js'
 };
 
 /** User packages configuration. */
