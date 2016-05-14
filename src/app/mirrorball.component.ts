@@ -8,6 +8,4 @@ import { SceneComponent } from './scene.component'
   styleUrls: ['mirrorball.component.css'],
   directives: [SceneComponent]
 })
-export class MirrorballAppComponent { 
-  title = 'mirrorball works!';
-}
+export class MirrorballAppComponent { }

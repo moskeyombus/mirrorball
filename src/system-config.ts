@@ -3,7 +3,8 @@
  **********************************************************************************************/
 /** Map relative paths to URLs. */
 const map: any = {
-  'three': 'vendor/three/three.js'
+  'three': 'vendor/three/three.js',
+  'three-orbit-controls': 'vendor/three-orbit-controls/index.js'
 };
 
 /** User packages configuration. */

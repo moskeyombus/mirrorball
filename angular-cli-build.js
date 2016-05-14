@@ -12,7 +12,8 @@ module.exports = function(defaults) {
       'reflect-metadata/*.js',
       'rxjs/**/*.js',
       '@angular/**/*.js',
-      'three/three.js'
+      'three/three.js',
+      'three-orbit-controls/index.js'
     ]
   });
 };

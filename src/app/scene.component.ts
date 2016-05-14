@@ -1,9 +1,11 @@
 import { Component, ElementRef, OnInit } from '@angular/core';
 import * as THREE from 'three';
+// import * as OrbitControls from 'three-orbit-controls';
 import WebGLRenderer = THREE.WebGLRenderer;
 import Scene = THREE.Scene;
 import PerspectiveCamera = THREE.PerspectiveCamera;
 import Mesh = THREE.Mesh;
+// import OrbitControls = THREE.OrbitControls;
 
 @Component({
   selector: 'scene',
@@ -14,8 +16,10 @@ export class SceneComponent implements OnInit {
   private scene: Scene;
   private camera: PerspectiveCamera;
   private renderer: WebGLRenderer;
-  private sphere: Mesh;  
+  private innerSphere: Mesh;
+  private outerSphere: Mesh;
   private container: ElementRef;
+  // private controls: OrbitControls;
   title = 'mirrorball works!';
     
   constructor(el:ElementRef) {
@@ -28,25 +32,32 @@ export class SceneComponent implements OnInit {
 
   public init(container: HTMLElement) {
     const width = window.innerWidth;
-    const height = window.innerHeight - 90;
+    const height = window.innerHeight;
 
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(45, width/height);
     this.camera.position.set(0, 0, 100);
-
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.setPixelRatio(window.devicePixelRatio);
     this.renderer.setSize(width, height);
     this.renderer.setClearColor(0x000000);
 
     container.appendChild(this.renderer.domElement);
+
     const textureLoader = new THREE.TextureLoader();
     textureLoader.load('assets/earth.jpg', t => {
-        let geometry = new THREE.SphereGeometry(5, 50, 50);
-        let material = new THREE.MeshLambertMaterial({map: t});
-        this.sphere = new THREE.Mesh(geometry, material);
+      let geometry = new THREE.SphereGeometry(10, 50, 50);
+      let material = new THREE.MeshLambertMaterial({map: t});
+      this.innerSphere = new THREE.Mesh(geometry, material);
+      this.scene.add(this.innerSphere);
+    });
 
-        this.scene.add(this.sphere);
+    textureLoader.load('assets/starwars.jpg', t => {
+      let geometry = new THREE.SphereGeometry(100, 50, 50);
+      let material = new THREE.MeshLambertMaterial({map: t});
+      this.outerSphere = new THREE.Mesh(geometry, material);
+      this.outerSphere.material.side = THREE.BackSide;
+      this.scene.add(this.outerSphere);
     });
 
     // Lights
@@ -58,9 +69,22 @@ export class SceneComponent implements OnInit {
     this.scene.add(pointLight);
 
     // start animation
-    // this.animate();
+    this.animate();
 
-    // // bind to window resizes
-    // window.addEventListener('resize', _ => this.onResize());    
+    // bind to window resizes
+    window.addEventListener('resize', _ => this.onResize());    
   }
+  
+  public animate() {
+    window.requestAnimationFrame(_ => this.animate());
+    this.renderer.render(this.scene, this.camera);
+   }  
+   
+  public onResize() {
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    this.renderer.setSize(width, height);
+    this.camera.aspect = width/height;
+    this.camera.updateProjectionMatrix();
+   }     
 }
