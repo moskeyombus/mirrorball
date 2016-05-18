@@ -4,6 +4,7 @@ import * as THREE from 'three';
 import WebGLRenderer = THREE.WebGLRenderer;
 import Scene = THREE.Scene;
 import PerspectiveCamera = THREE.PerspectiveCamera;
+import CubeCamera = THREE.CubeCamera;
 import Mesh = THREE.Mesh;
 // import OrbitControls = THREE.OrbitControls;
 
@@ -17,8 +18,10 @@ export class SceneComponent implements OnInit {
   private camera: PerspectiveCamera;
   private renderer: WebGLRenderer;
   private innerSphere: Mesh;
+  private innerSphereCamera: CubeCamera;
   private outerSphere: Mesh;
   private container: ElementRef;
+  
   // private controls: OrbitControls;
   title = 'mirrorball works!';
     
@@ -45,12 +48,26 @@ export class SceneComponent implements OnInit {
     container.appendChild(this.renderer.domElement);
 
     const textureLoader = new THREE.TextureLoader();
-    textureLoader.load('assets/earth.jpg', t => {
+    
+    
+    // textureLoader.load('assets/earth.jpg', t => {
       let geometry = new THREE.SphereGeometry(10, 50, 50);
-      let material = new THREE.MeshLambertMaterial({map: t});
+      this.innerSphereCamera = new THREE.CubeCamera( 0.1, 5000, 512 );
+      // this.innerSphereCamera.renderTarget.texture.minFilter = THREE.LinearMipMapLinearFilter; // mipmap filter
+      this.scene.add(this.innerSphereCamera);           
+      // let material = new THREE.MeshLambertMaterial({map: t});
+      // let params: THREE.MeshBasicMaterialParameters = { color: 0xffffff, envMap: this.innerSphereCamera.renderTarget }; //this.innerSphereCamera.renderTarget
+      // let material = new THREE.MeshBasicMaterial(params);
+      
+      let material = new THREE.MeshBasicMaterial({
+          color: 'gold',
+          envMap: this.innerSphereCamera.renderTarget.texture
+      });    
       this.innerSphere = new THREE.Mesh(geometry, material);
+      this.innerSphere.position.set(0,0,0);
+      // this.innerSphereCamera.position = this.innerSphere.position;
       this.scene.add(this.innerSphere);
-    });
+    // });
 
     textureLoader.load('assets/starwars.jpg', t => {
       let geometry = new THREE.SphereGeometry(100, 50, 50);
@@ -77,6 +94,9 @@ export class SceneComponent implements OnInit {
   
   public animate() {
     window.requestAnimationFrame(_ => this.animate());
+    this.innerSphere.visible = false;
+    this.innerSphereCamera.updateCubeMap( this.renderer, this.scene );
+    this.innerSphere.visible = true;    
     this.renderer.render(this.scene, this.camera);
    }  
    

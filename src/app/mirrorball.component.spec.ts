@@ -14,9 +14,4 @@ describe('App: Mirrorball', () => {
       inject([MirrorballAppComponent], (app: MirrorballAppComponent) => {
     expect(app).toBeTruthy();
   }));
-
-  it('should have as title \'mirrorball works!\'',
-      inject([MirrorballAppComponent], (app: MirrorballAppComponent) => {
-    expect(app.title).toEqual('mirrorball works!');
-  }));
 });
